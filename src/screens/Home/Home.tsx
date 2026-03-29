@@ -4,6 +4,7 @@ export const Home = (): JSX.Element => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cardsPerView, setCardsPerView] = useState(3);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [blogSlideIndex, setBlogSlideIndex] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const classes = [
@@ -106,6 +107,35 @@ export const Home = (): JSX.Element => {
     const centerIndex = Math.floor(cardsPerView / 2);
     const distance = Math.abs(index % cardsPerView - centerIndex);
     return distance === 0 ? 1.1 : 0.9;
+  };
+
+  const blogSlides = [
+    {
+      date: "Building Strength",
+      title: "Pole Dance Mastery",
+      description: "Experience the art of pole dancing. Learn spins, inversions, and strength-building techniques in our supportive community.",
+      image: "https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      date: "Aerial Arts",
+      title: "Aerial Hoop Journey",
+      description: "Soar through the air with our aerial hoop classes. Perfect for all levels, building confidence and grace.",
+      image: "https://images.pexels.com/photos/3945683/pexels-photo-3945683.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      date: "Flexibility Focus",
+      title: "Stretch & Mobility",
+      description: "Unlock your body's potential with guided stretching sessions. Improve flexibility and reduce tension.",
+      image: "https://images.pexels.com/photos/4327048/pexels-photo-4327048.jpeg?auto=compress&cs=tinysrgb&w=800"
+    }
+  ];
+
+  const nextBlogSlide = () => {
+    setBlogSlideIndex((prev) => (prev + 1) % blogSlides.length);
+  };
+
+  const prevBlogSlide = () => {
+    setBlogSlideIndex((prev) => (prev - 1 + blogSlides.length) % blogSlides.length);
   };
 
   return (
@@ -434,14 +464,14 @@ export const Home = (): JSX.Element => {
         </div>
       </section>
 
-      {/* Instagram Feed Section */}
+      {/* Blog Gallery Slider Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-[#838EFA] to-[#6071E5] bg-clip-text text-transparent">
-            From Our Instagram
+            Gallery & Stories
           </h2>
-          <p className="text-center text-gray-600 mb-12">
-            Follow us{" "}
+          <p className="text-center text-gray-600 mb-16">
+            Discover moments from our community. Follow us{" "}
             <a
               href="https://www.instagram.com/mgold.studio.cy/"
               target="_blank"
@@ -451,22 +481,95 @@ export const Home = (): JSX.Element => {
               @mgold.studio.cy
             </a>
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <a
-                key={i}
-                href="https://www.instagram.com/mgold.studio.cy/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="aspect-square bg-gradient-to-br from-[#838EFA]/10 to-[#6071E5]/10 rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
-              >
-                <div className="w-full h-full flex items-center justify-center">
-                  <svg className="w-12 h-12 text-[#838EFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+
+          <div className="relative">
+            {/* Blog Slider */}
+            <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-96 lg:min-h-[450px]">
+              {/* Image Container */}
+              <div className="relative w-full lg:w-2/5 h-80 lg:h-auto overflow-hidden flex-shrink-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#838EFA] to-[#6071E5] opacity-20" />
+                {blogSlides.map((slide, index) => (
+                  <img
+                    key={index}
+                    src={slide.image}
+                    alt={slide.title}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                      index === blogSlideIndex ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              {/* Content Container */}
+              <div className="w-full lg:w-3/5 p-8 lg:p-12 flex flex-col justify-center">
+                <div className="overflow-hidden">
+                  <div
+                    className="transition-all duration-700 ease-in-out"
+                    style={{
+                      transform: `translateY(${blogSlideIndex * -100}%)`,
+                    }}
+                  >
+                    {blogSlides.map((slide, index) => (
+                      <div key={index} className="min-h-full">
+                        <span className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-[#838EFA]/10 to-[#6071E5]/10 text-[#6071E5] font-medium text-sm mb-4">
+                          {slide.date}
+                        </span>
+                        <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                          {slide.title}
+                        </h3>
+                        <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                          {slide.description}
+                        </p>
+                        <a
+                          href="https://www.instagram.com/mgold.studio.cy/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block bg-gradient-to-r from-[#838EFA] to-[#6071E5] text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all"
+                        >
+                          Learn More
+                        </a>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </a>
-            ))}
+              </div>
+
+              {/* Navigation Buttons */}
+              <button
+                onClick={prevBlogSlide}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-[#6071E5] p-2 rounded-full shadow-lg transition-all hover:scale-110 lg:left-8"
+                aria-label="Previous slide"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={nextBlogSlide}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-[#6071E5] p-2 rounded-full shadow-lg transition-all hover:scale-110 lg:right-8"
+                aria-label="Next slide"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {/* Pagination */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 lg:bottom-auto lg:right-6 lg:left-auto lg:-translate-x-0 flex gap-3 z-20">
+                {blogSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setBlogSlideIndex(index)}
+                    className={`transition-all duration-300 rounded-full ${
+                      index === blogSlideIndex
+                        ? 'w-8 h-3 bg-gradient-to-r from-[#838EFA] to-[#6071E5] shadow-lg'
+                        : 'w-3 h-3 bg-gray-400 hover:bg-gray-500'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
